@@ -13,7 +13,7 @@ struct MyStruct {
     uint8_t d;  // 8 bit integer
 };
 
-//EEPROM is really just an block of memory, where the address is just a location in the array
+//EEPROM is really just an block of memory, where the address is just a pointer to a location in memory
 //So a simple representation of EEPROM memory can just be an array.
 //The array index is the address. In this case the EEPROM stores 16 bits (2 bytes) per address.
 uint16_t EEPROM[8] = {0x4241, 0x4443, 0x0045, 0x4847, 0x0049, 0x4C4B, 0x4E4D, 0x504F};
@@ -36,7 +36,7 @@ template< typename T> const T &get(int address, T &t)
      * So if we call this from our code:
      * MyStruct t; get<MyStruct>(0, t);
      * The precompiler turns the template into this function for us:
-     * const MyStruct &get(int idx, MyStruct &t)
+     * const MyStruct &get(int address, MyStruct &t)
      * If we call the template with more types/structs, it just repeats the function for each.
      */
 
