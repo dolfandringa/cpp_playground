@@ -11,7 +11,7 @@
 //Lets take a simple array of 8 16-bit (2 byte) integers (written in hex notation)
 //as you know, numbers can be written in binary, decimal, hexadecimal and octal notation.
 //We normally use decimal (0-9), but hexadecimal (0-F) is a little easier with computers
-//since the 16 numbers you can represent with 0-F are exactly 4 bits = 1/2 a byte = 1 nibble.
+//since the 16 numbers you can represent with 0-F fill exactly 4 bits = 1/2 a byte = 1 nibble.
 //So with 2 hexadecimal numbers you can represent 8bits = 1 byte.
 //In hexadecimal notation, the 0x is used to denote that it actually IS hexadecimal notation,
 //but the 0x doesn't mean anything to the value. So 0x4241 just means a hexadecimal number
