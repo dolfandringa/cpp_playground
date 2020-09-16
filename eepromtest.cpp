@@ -13,6 +13,13 @@ struct MyStruct {
     uint8_t d;  // 8 bit integer
 };
 
+struct MyStruct2 {
+    uint8_t a;
+    uint8_t b;
+    char c[3];
+    float d;  
+};
+
 //EEPROM is really just an block of memory, where the address is just a pointer to a location in memory
 //So a simple representation of EEPROM memory can just be an array.
 //The array index is the address. In this case the EEPROM stores 16 bits (2 bytes) per address.
@@ -21,6 +28,9 @@ uint16_t EEPROM[8] = {0x4241, 0x4443, 0x0045, 0x4847, 0x0049, 0x4C4B, 0x4E4D, 0x
 //A simple read function then just copies the data at the address from the array to the desination.
 void read(uint8_t address, uint16_t *data) {
     *data = EEPROM[address];
+}
+void write(uint8_t address, uint16_t *data) {
+    EEPROM[address] = *data;
 }
 
 //Create a template function that gets a type (i.e. a struct) from eeprom and returns it.
@@ -61,6 +71,18 @@ template< typename T> const T &get(int address, T &t)
         ptr++; //Move the pointer up by 16 bits;
     }
     return t;
+}
+
+template< typename T> void put(int address, T &t)
+{
+
+    uint16_t *ptr = (uint16_t*) &t; 
+    printf("MyStruct size: %d\n", sizeof(T));
+    for(int count = sizeof(T);count;count-=2, address++) {
+        write(address, ptr);
+        printf("Wrote value %d: 0x%.4X\n", address, *ptr);
+        ptr++; //Move the pointer up by 16 bits;
+    }
 }
 
 
@@ -104,4 +126,18 @@ int main(){
     printf("ms.c (char[3]): %s\n", ms.c);
     printf("ms.d (uint8_t): 0x%.2X\n", ms.d);
 
+    //A little more complex becuase of the float value and struct padding with 0x00 after ms.c
+    MyStruct2 ms2;
+    ms2.a=1;
+    ms2.b=2;
+    strcpy(ms2.c, "Hi");
+    ms2.d=15.6;
+    put<MyStruct2>(0, ms2);
+    get<MyStruct2>(0, ms2);
+
+    printf("get<MyStruct>(2, ms);\n");
+    printf("ms.a (uint8_t): 0x%.2X\n", ms2.a);
+    printf("ms.b (uint8_t): 0x%.2X\n", ms2.b);
+    printf("ms.c (char[3]): %s\n", ms2.c);
+    printf("ms.d (float): %f\n", ms2.d);
 }
